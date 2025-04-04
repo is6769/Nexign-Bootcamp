@@ -1,0 +1,21 @@
+[submodule "services/ApiGateway"]
+	path = services/ApiGateway
+	url = https://github.com/is6769/NXB-ApiGateway
+[submodule "services/EurekaServer"]
+	path = services/EurekaServer
+	url = https://github.com/is6769/NXB-EurekaServer
+[submodule "services/ConfigServer"]
+	path = services/ConfigServer
+	url = https://github.com/is6769/NXB-ConfigServer
+[submodule "services/CDRService"]
+	path = services/CDRService
+	url = https://github.com/is6769/NXB-CDRService
+[submodule "services/BRTService"]
+	path = services/BRTService
+	url = https://github.com/is6769/NXB-BRTService
+[submodule "services/CRMService"]
+	path = services/CRMService
+	url = https://github.com/is6769/NXB-CRMService
+[submodule "services/HRSService"]
+	path = services/HRSService
+	url = https://github.com/is6769/NXB-HRSService
