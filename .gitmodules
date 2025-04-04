@@ -19,3 +19,6 @@
 [submodule "services/HRSService"]
 	path = services/HRSService
 	url = https://github.com/is6769/NXB-HRSService
+[submodule "config-vault"]
+	path = config-vault
+	url = https://github.com/is6769/NXB-ConfigVault
