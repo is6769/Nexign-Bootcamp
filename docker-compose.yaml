@@ -1,4 +1,87 @@
 services:
+
+  config-server:
+    build:
+      context: .
+      dockerfile: dockerfiles/ConfigServer/Dockerfile
+    ports:
+      - "8888:8888"
+    healthcheck:
+      test: "curl --fail --silent localhost:8888/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks:
+      - app-network
+
+  eureka-server:
+    build:
+      context: .
+      dockerfile: dockerfiles/EurekaServer/Dockerfile
+    ports:
+      - "8761:8761"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8761/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks:
+      - app-network
+
+  brt-service:
+    build:
+      context: .
+      dockerfile: dockerfiles/BRTService/Dockerfile
+    ports:
+      - "8090-9000:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      brt-db:
+        condition: service_healthy
+
+
+  cdr-service:
+    build:
+      context: .
+      dockerfile: dockerfiles/CDRService/Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  crm-service:
+    build:
+      context: .
+      dockerfile: dockerfiles/CRMService/Dockerfile
+    ports:
+      - "8070-8079:8083"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  hrs-service:
+    build:
+      context: .
+      dockerfile: dockerfiles/HRSService/Dockerfile
+    ports:
+      - "8060-8069:8084"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      hrs-db:
+        condition: service_healthy
+
+
   rabbitmq:
     image: rabbitmq:4.0.8-management
     hostname: rabbit-mq
@@ -10,22 +93,39 @@ services:
       - RABBITMQ_DEFAULT_PASS=admin
     healthcheck:
       test: [ "CMD-SHELL", "rabbitmq-diagnostics -q ping" ]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 5
-  postgres:
+
+  brt-db:
     image: postgres:17.4
     environment:
-      POSTGRES_USER: postgres_admin
-      POSTGRES_PASSWORD: postgres_password
-      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: brt-db
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "5430-5432:5432"
-    deploy:
-      replicas: 2
+      - "5432:5432"
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres_admin -d postgres" ]
-      interval: 30s
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      interval: 15s
       timeout: 10s
       retries: 5
+  hrs-db:
+    image: postgres:17.4
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: hrs-db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+
+networks:
+  app-network:
+    driver: bridge
