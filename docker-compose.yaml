@@ -21,7 +21,7 @@ services:
     ports:
       - "8761:8761"
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       config-server:
         condition: service_healthy
@@ -39,8 +39,6 @@ services:
       dockerfile: dockerfiles/BRTService/Dockerfile
     ports:
       - "8090-9000:8081"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -54,32 +52,10 @@ services:
       dockerfile: dockerfiles/CDRService/Dockerfile
     ports:
       - "8082:8082"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
     depends_on:
       rabbitmq:
         condition: service_healthy
 
-  crm-service:
-    build:
-      context: .
-      dockerfile: dockerfiles/CRMService/Dockerfile
-    ports:
-      - "8070-8079:8083"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-
-  hrs-service:
-    build:
-      context: .
-      dockerfile: dockerfiles/HRSService/Dockerfile
-    ports:
-      - "8060-8069:8084"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-    depends_on:
-      hrs-db:
-        condition: service_healthy
 
 
   rabbitmq:
