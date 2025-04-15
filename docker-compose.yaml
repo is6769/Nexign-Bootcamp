@@ -37,6 +37,8 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/BRTService/Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
     ports:
       - "8090-9000:8081"
     depends_on:
@@ -44,17 +46,27 @@ services:
         condition: service_healthy
       brt-db:
         condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - app-network
 
 
   cdr-service:
     build:
       context: .
       dockerfile: dockerfiles/CDRService/Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
     ports:
       - "8082:8082"
     depends_on:
       rabbitmq:
         condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - app-network
 
 
 
@@ -72,6 +84,8 @@ services:
       interval: 15s
       timeout: 10s
       retries: 5
+    networks:
+      - app-network
 
   brt-db:
     image: postgres:17.4
@@ -87,6 +101,9 @@ services:
       interval: 15s
       timeout: 10s
       retries: 5
+    networks:
+      - app-network
+
   hrs-db:
     image: postgres:17.4
     environment:
@@ -101,6 +118,8 @@ services:
       interval: 15s
       timeout: 10s
       retries: 5
+    networks:
+      - app-network
 
 networks:
   app-network:
