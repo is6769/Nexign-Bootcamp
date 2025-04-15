@@ -8,7 +8,7 @@ services:
       - "8888:8888"
     healthcheck:
       test: "curl --fail --silent localhost:8888/actuator/health | grep UP || exit 1"
-      interval: 10s
+      interval: 5s
       timeout: 10s
       retries: 5
     networks:
@@ -27,7 +27,7 @@ services:
         condition: service_healthy
     healthcheck:
       test: "curl --fail --silent localhost:8761/actuator/health | grep UP || exit 1"
-      interval: 10s
+      interval: 5s
       timeout: 10s
       retries: 5
     networks:
@@ -42,6 +42,8 @@ services:
     ports:
       - "8090-9000:8081"
     depends_on:
+      config-server:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
       brt-db:
@@ -61,6 +63,8 @@ services:
     ports:
       - "8082:8082"
     depends_on:
+      config-server:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
       eureka-server:
@@ -68,6 +72,40 @@ services:
     networks:
       - app-network
 
+  hrs-service:
+    build:
+      context: .
+      dockerfile: dockerfiles/HRSService/Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8070-8079:8084"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      hrs-db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  crm-service:
+    build:
+      context: .
+      dockerfile: dockerfiles/CRMService/Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8060-8069:8083"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+
+    networks:
+      - app-network
 
 
   rabbitmq:
@@ -81,7 +119,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=admin
     healthcheck:
       test: [ "CMD-SHELL", "rabbitmq-diagnostics -q ping" ]
-      interval: 15s
+      interval: 5s
       timeout: 10s
       retries: 5
     networks:
@@ -98,7 +136,7 @@ services:
       - "5432:5432"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
-      interval: 15s
+      interval: 5s
       timeout: 10s
       retries: 5
     networks:
@@ -115,7 +153,7 @@ services:
       - "5433:5432"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
-      interval: 15s
+      interval: 5s
       timeout: 10s
       retries: 5
     networks:
