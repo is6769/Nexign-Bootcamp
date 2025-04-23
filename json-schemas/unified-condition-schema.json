@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Условие применимости правила",
+  "description": "Унифицированная схема для определения условий применимости правил тарификации",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["field", "and", "or", "always_true"],
+      "description": "Тип условия: field - проверка поля, and/or - логическое объединение, always_true - безусловное"
+    },
+    "field": {
+      "type": "string",
+      "description": "Название поля для проверки (только для type='field')"
+    },
+    "operator": {
+      "type": "string",
+      "enum": ["equals", "not_equals", "greater", "less", "greater_or_equals", 
+               "less_or_equals", "in", "not_in", "between", "not_between", "contains"],
+      "description": "Оператор сравнения (только для type='field')"
+    },
+    "value": {
+      "description": "Значение для сравнения (только для type='field')"
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "$ref": "#"
+      },
+      "description": "Список вложенных условий (только для type='and' или type='or')"
+    }
+  },
+  "required": ["type"],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": { "enum": ["field"] }
+        }
+      },
+      "then": {
+        "required": ["field", "operator", "value"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": { "enum": ["and", "or"] }
+        }
+      },
+      "then": {
+        "required": ["conditions"],
+        "properties": {
+          "conditions": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}
