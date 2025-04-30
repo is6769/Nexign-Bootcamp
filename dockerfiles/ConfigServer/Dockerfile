@@ -1,5 +1,13 @@
+FROM maven:3.9.9-eclipse-temurin-17 AS build
+WORKDIR /opt/app
+COPY services/ConfigServer/pom.xml .
+RUN mvn dependency:go-offline
+
+COPY services/ConfigServer/src ./src
+RUN mvn clean package -DskipTests
+
 FROM eclipse-temurin:17
-RUN mkdir /opt/app
-COPY services/ConfigServer/target/ConfigServer-0.0.1-SNAPSHOT.jar /opt/app/service.jar
+WORKDIR /opt/app
+COPY --from=build /opt/app/target/*.jar ./service.jar
 EXPOSE 8888
-CMD ["java", "-jar", "/opt/app/service.jar"]
+ENTRYPOINT ["java", "-jar", "/opt/app/service.jar"]
