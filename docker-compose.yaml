@@ -41,6 +41,11 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     ports:
       - "8090-9000:8081"
+    healthcheck:
+      test: "curl --fail --silent localhost:8081/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 10s
+      retries: 5
     depends_on:
       config-server:
         condition: service_healthy
@@ -109,6 +114,8 @@ services:
       config-server:
         condition: service_healthy
       eureka-server:
+        condition: service_healthy
+      brt-service:
         condition: service_healthy
 
     networks:
