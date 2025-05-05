@@ -22,3 +22,6 @@
 [submodule "config-vault"]
 	path = config-vault
 	url = https://github.com/is6769/NXB-ConfigVault
+[submodule "services/SSOService"]
+	path = services/SSOService
+	url = https://github.com/is6769/NXB-SSOService
