@@ -121,6 +121,17 @@ services:
     networks:
       - app-network
 
+  sso-service:
+    build:
+      context: .
+      dockerfile: dockerfiles/SSOService/Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8765:8765"
+    networks:
+      - app-network
+
 
   rabbitmq:
     image: rabbitmq:4.0.8-management
