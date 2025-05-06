@@ -33,6 +33,28 @@ services:
     networks:
       - app-network
 
+  api-gateway:
+    build:
+      context: .
+      dockerfile: dockerfiles/ApiGateway/Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - app-network
+
+
   brt-service:
     build:
       context: .
@@ -129,6 +151,9 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     ports:
       - "8765:8765"
+    depends_on:
+      config-server:
+        condition: service_healthy
     networks:
       - app-network
 
