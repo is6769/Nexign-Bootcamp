@@ -154,6 +154,8 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
+      eureka-server:
+        condition: service_healthy
     networks:
       - app-network
 
