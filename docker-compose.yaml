@@ -10,7 +10,7 @@ services:
       test: "curl --fail --silent localhost:8888/actuator/health | grep UP || exit 1"
       interval: 5s
       timeout: 10s
-      retries: 5
+      retries: 10
     networks:
       - app-network
 
@@ -29,7 +29,7 @@ services:
       test: "curl --fail --silent localhost:8761/actuator/health | grep UP || exit 1"
       interval: 5s
       timeout: 10s
-      retries: 5
+      retries: 10
     networks:
       - app-network
 
@@ -45,7 +45,7 @@ services:
       test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
       interval: 5s
       timeout: 10s
-      retries: 5
+      retries: 10
     depends_on:
       config-server:
         condition: service_healthy
@@ -67,7 +67,7 @@ services:
       test: "curl --fail --silent localhost:8081/actuator/health | grep UP || exit 1"
       interval: 5s
       timeout: 10s
-      retries: 5
+      retries: 10
     depends_on:
       config-server:
         condition: service_healthy
@@ -78,8 +78,6 @@ services:
       eureka-server:
         condition: service_healthy
       hrs-service:
-        condition: service_healthy
-      sso-service:
         condition: service_healthy
     networks:
       - app-network
@@ -93,6 +91,11 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     ports:
       - "8082:8082"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 10s
+      retries: 10
     depends_on:
       config-server:
         condition: service_healthy
@@ -115,7 +118,7 @@ services:
       test: "curl --fail --silent localhost:8084/actuator/health | grep UP || exit 1"
       interval: 5s
       timeout: 10s
-      retries: 5
+      retries: 10
     depends_on:
       config-server:
         condition: service_healthy
@@ -134,6 +137,11 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     ports:
       - "8060-8069:8083"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 10s
+      retries: 10
     depends_on:
       config-server:
         condition: service_healthy
@@ -154,10 +162,10 @@ services:
     ports:
       - "8765:8765"
     healthcheck:
-      test: "curl --fail --silent localhost:8765/actuator/health | grep UP || exit 1"
+      test: "curl --fail --silent localhost:8765/actuator/health | grep UP || exit 1 "
       interval: 5s
       timeout: 10s
-      retries: 5
+      retries: 10
     depends_on:
       config-server:
         condition: service_healthy
@@ -182,7 +190,7 @@ services:
       test: [ "CMD-SHELL", "rabbitmq-diagnostics -q ping" ]
       interval: 5s
       timeout: 10s
-      retries: 5
+      retries: 10
     networks:
       - app-network
 
@@ -199,7 +207,7 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
       interval: 5s
       timeout: 10s
-      retries: 5
+      retries: 10
     networks:
       - app-network
 
@@ -216,7 +224,7 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
       interval: 5s
       timeout: 10s
-      retries: 5
+      retries: 10
     networks:
       - app-network
 
@@ -233,7 +241,7 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
       interval: 5s
       timeout: 10s
-      retries: 5
+      retries: 10
     networks:
       - app-network
 
