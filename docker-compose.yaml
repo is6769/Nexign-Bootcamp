@@ -63,8 +63,8 @@ services:
       dockerfile: dockerfiles/BRTService/Dockerfile
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-    ports:
-      - "8090-9000:8081"
+#    ports:
+#      - "8090-9000:8081"
     healthcheck:
       test: "curl --fail --silent localhost:8081/actuator/health | grep UP || exit 1 && curl --fail --silent localhost:8081/actuator/health/eurekaRegistration | grep UP || exit 1"
       interval: 5s
@@ -91,8 +91,8 @@ services:
       dockerfile: dockerfiles/CDRService/Dockerfile
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-    ports:
-      - "8082:8082"
+#    ports:
+#      - "8082:8082"
     healthcheck:
       test: "curl --fail --silent localhost:8082/actuator/health | grep UP || exit 1"
       interval: 5s
@@ -114,8 +114,8 @@ services:
       dockerfile: dockerfiles/HRSService/Dockerfile
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-    ports:
-      - "8070-8079:8084"
+#    ports:
+#      - "8070-8079:8084"
     healthcheck:
       test: "curl --fail --silent localhost:8084/actuator/health | grep UP || exit 1 && curl --fail --silent localhost:8084/actuator/health/eurekaRegistration | grep UP || exit 1"
       interval: 5s
@@ -137,8 +137,8 @@ services:
       dockerfile: dockerfiles/CRMService/Dockerfile
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-    ports:
-      - "8060-8069:8083"
+#    ports:
+#      - "8060-8069:8083"
     healthcheck:
       test: "curl --fail --silent localhost:8083/actuator/health | grep UP || exit 1 && curl --fail --silent localhost:8083/actuator/health/eurekaRegistration | grep UP || exit 1"
       interval: 5s
@@ -161,8 +161,8 @@ services:
       dockerfile: dockerfiles/SSOService/Dockerfile
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-    ports:
-      - "8765:8765"
+#    ports:
+#      - "8765:8765"
     healthcheck:
       test: "curl --fail --silent localhost:8765/actuator/health | grep UP || exit 1 "
       interval: 5s
