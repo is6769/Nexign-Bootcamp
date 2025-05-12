@@ -97,7 +97,6 @@ docker-compose up -d
 
 #### Предварительные требования
 
-- IntelliJ IDEA 2023.2 или новее с установленными плагинами Spring Boot
 - Java 17 JDK
 - PostgreSQL на портах с пользователем `postgres` и паролем `postgres`:
   - 5432 (для BRT-сервиса): `jdbc:postgresql://localhost:5432/brt-db`
